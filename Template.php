@@ -8,6 +8,12 @@ namespace Bricks\TemplateEngine\Php;
  */
 class Template{
   /**
+   * @var array Ассоциативный массив данных, доступных в качестве 
+   * вспомогательных при рендеринге шаблонов.
+   */
+  static private $helpers = [];
+
+  /**
    * @var string Адрес файла шаблона.
    */
   private $file;
@@ -16,6 +22,17 @@ class Template{
    * @var array Переменные окружения шаблона, используемые для рендеринга.
    */
   private $env = [];
+
+  /**
+   * Устанавливает глобальный помощник, доступный всем шаблонам при их 
+   * рендеринге.
+   *
+   * @param string $name Имя помощника.
+   * @param mixed $helper Помощник.
+   */
+  static public function helper($name, $helper){
+    static::$helpers[$name] = $helper;
+  }
 
   /**
    * @param string $file Адрес файла шаблона.
@@ -42,6 +59,7 @@ class Template{
   }
 
   public function __toString(){
+    extract(static::$helpers);
     extract($this->env);
     ob_start();
     include($this->file);

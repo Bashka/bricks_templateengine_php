@@ -34,3 +34,30 @@ $tpl->content = 'Hello world';
 $tpl->env(['title' => 'My page', 'content' => 'Hello world']);
 echo $tpl;
 ```
+
+# Помощники
+
+Если для рендеринга шаблонов требуются вспомогательные функции или глобальные 
+данные, можно определить их с помощью статичного метода _hepler_ класса 
+_Template_. Все определенные этим методом помощники будут доступны во всех 
+шаблонах.
+
+Пример определения и использования помощника, облегчающего процесс подключения 
+внешних шаблонов:
+
+```php
+Template::helper('include', function($file, array $env = []){
+  $template = new Template($file);
+  return $template->evn($env);
+});
+
+$tpl = new Template('template.tpl');
+echo $tpl;
+```
+
+Файл шаблона:
+```html
+<div>
+  <?= $include('other_template.html', ['content' => 'Hello world']) ?>
+</div>
+```
